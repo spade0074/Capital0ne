@@ -537,12 +537,7 @@
                             const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                             
                             sessionStorage.setItem('transactions', JSON.stringify([
-                                { 
-                                    desc: "Deposit", 
-                                    amount: 300, 
-                                    date: `${dateStr} at ${timeStr}`
-                                },
-                                { desc: "Withdrawal", amount: -60000, date: "feb 13, 2026" },
+                                { desc: "Withdrawal", amount: -60000, date: "Feb 13, 2026" },
                                 { desc: "Withdrawal", amount: -85000, date: "Jan 10, 2026" },
                                 { desc: "Withdrawal", amount: -50000, date: "May 7, 2025" },
                                 { desc: "Withdrawal", amount: -55000, date: "Apr 25, 2025" },
@@ -933,11 +928,6 @@
             const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             
             sessionStorage.setItem('transactions', JSON.stringify([
-                { 
-                    desc: "Deposit", 
-                    amount: 300, 
-                    date: `${dateStr} at ${timeStr}`
-                },
                 { desc: "Withdrawal", amount: -60000, date: "Feb 13, 2026" },
                 { desc: "Withdrawal", amount: -85000, date: "Jan 10, 2026" },
                 { desc: "Withdrawal", amount: -50000, date: "May 7, 2025" },
