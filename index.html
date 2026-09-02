@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Capital One Banking | Secure Transfers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .app-container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            background: #ffffff;
+            box-shadow: none;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            min-height: 100vh;
+            border-radius: 0;
+        }
+
+        .page {
+            padding: 2rem 1.8rem 2.2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .logo {
+            flex: 1;
+        }
+        .capitalone-wordmark {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0047ab;
+            letter-spacing: 2px;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+        }
+        .logo-sub {
+            font-size: 0.7rem;
+            color: #5a6e8a;
+            border-left: 2px solid #0047ab;
+            padding-left: 0.6rem;
+            margin: 0.4rem 0 1.5rem 0.2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.4rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            color: #1f2a44;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 16px;
+            border: 1px solid #d0d7de;
+            background: #ffffff;
+            font-size: 0.95rem;
+            transition: 0.15s;
+            outline: none;
+            color: #1a2c3e;
+        }
+        input:focus {
+            border-color: #0047ab;
+            box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.1);
+        }
+        button {
+            background: #0047ab;
+            color: white;
+            border: none;
+            padding: 0.85rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+        button:hover {
+            background: #003380;
+            transform: translateY(-1px);
+        }
+
+        .note-text {
+            font-size: 0.7rem;
+            color: #6c7a91;
+            margin-top: 1.2rem;
+            text-align: center;
+            border-top: 1px solid #e6edf2;
+            padding-top: 1.2rem;
+        }
+        .error-msg {
+            color: #d14545;
+            font-size: 0.75rem;
+            margin-top: 0.6rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e6edf2;
+        }
+        .participant-badge {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #1f2a44;
+            letter-spacing: 0.3px;
+        }
+        .logout-btn {
+            background: #f0f4f8;
+            color: #2c3e50;
+            width: auto;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0;
+        }
+        .logout-btn:hover {
+            background: #e2e8f0;
+            transform: none;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #0047ab 0%, #002d6b 100%);
+            border-radius: 28px;
+            padding: 1.5rem;
+            color: white;
+            margin: 1rem 0 1.5rem 0;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0, 71, 171, 0.2);
+        }
+        .balance-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 0.4rem;
+        }
+        .balance-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        .account-number {
+            font-family: monospace;
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            margin-top: 0.9rem;
+            color: #ffffff;
+        }
+
+        .transfer-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eef3f8;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 12px;
+        }
+        .transaction-item:hover {
+            background: #f0f4f8;
+        }
+        .transaction-desc {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #1a2c3e;
+        }
+        .transaction-date {
+            font-size: 0.65rem;
+            color: #8b9ab0;
+            margin-top: 0.2rem;
+        }
+        .transaction-amount {
+            font-weight: 700;
+            color: #c2412c;
+            font-size: 0.9rem;
+        }
+        .transaction-amount.positive {
+            color: #2b6e3c;
+        }
+        .pending-transaction {
+            background: #e8f0fe;
+            border-left: 3px solid #0047ab;
+            padding: 0.8rem 0.8rem;
+            border-radius: 12px;
+        }
+
+        .transfer-detail {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            border-left: 3px solid #0047ab;
+            color: #1a2c3e;
+        }
+
+        .back-link {
+            background: none;
+            color: #0047ab;
+            font-size: 0.8rem;
+            text-align: left;
+            padding: 0;
+            margin-top: 0;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            background: none;
+            text-decoration: underline;
+        }
+        .toast-message {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0047ab;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            z-index: 1000;
+            animation: fadeInOut 2s ease;
+            pointer-events: none;
+            font-weight: 500;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+        .capitalone-watermark {
+            font-size: 0.6rem;
+            text-align: center;
+            color: #8ba0bc;
+            margin-top: 1rem;
+        }
+        
+        .user-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.25rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .greeting-text {
+            font-size: 0.9rem;
+            color: #1f2a44;
+            font-weight: 500;
+        }
+
+        .bank-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .bank-input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 16px;
+            border: 1px solid #d0d7de;
+            background: #ffffff;
+            font-size: 0.95rem;
+            color: #1a2c3e;
+            outline: none;
+        }
+        .bank-input:focus {
+            border-color: #0047ab;
+            box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.1);
+        }
+        .bank-dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #0047ab;
+            border-radius: 16px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .bank-dropdown-list.show {
+            display: block;
+        }
+        .bank-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            color: #1a2c3e;
+            transition: background 0.15s;
+        }
+        .bank-option:hover {
+            background: #0047ab;
+            color: white;
+        }
+        .small-note {
+            font-size: 0.65rem;
+            color: #8ba0bc;
+            margin-top: 0.4rem;
+        }
+
+        .pin-display {
+            width: 100%;
+            text-align: center;
+            font-size: 2rem;
+            letter-spacing: 16px;
+            font-weight: 600;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1rem;
+            color: #1a2c3e;
+            font-family: monospace;
+        }
+        .numeric-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .keypad-btn {
+            background: #f0f4f8;
+            color: #1a2c3e;
+            border: 1px solid #d0d7de;
+            padding: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.1s;
+            margin: 0;
+        }
+        .keypad-btn:active {
+            transform: scale(0.95);
+            background: #0047ab;
+            color: white;
+        }
+        .keypad-delete {
+            background: #fee2e2;
+            color: #c2412c;
+        }
+        .keypad-clear {
+            background: #f0f4f8;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .contact-support-btn {
+            background: #1a2c3e;
+            color: white;
+            border: none;
+            padding: 0.85rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0;
+        }
+        .contact-support-btn:hover {
+            background: #0f1a2a;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="appRoot"></div>
+
+<script>
+    // UPDATED CREDENTIALS
+    const VALID_USERNAME = "Romero256";
+    const VALID_CODE = "123654";
+    const ACCOUNT_MASK = "****2638";
+    const VALID_PIN = "1239";
+
+    const BANK_LIST = [
+        "Ally Bank", "American Express Bank", "ANZ", "Bank of America", "Barclays", "BBVA", "BMO Harris",
+        "BNP Paribas", "Capital One", "Charles Schwab Bank", "Chime", "CIBC", "Citibank", "Citizens Bank",
+        "Commonwealth Bank", "Crédit Agricole", "Credit Suisse", "DBS Bank", "Deutsche Bank", "Discover Bank",
+        "Fifth Third Bank", "First Republic", "Goldman Sachs (Marcus)", "HSBC", "Huntington Bank", "ING",
+        "JPMorgan Chase", "KeyBank", "Lloyds Bank", "M&T Bank", "Mitsubishi UFJ", "Mizuho", "Monzo",
+        "Morgan Stanley", "N26", "NAB", "NatWest", "Navy Federal Credit Union", "OCBC", "PNC Bank",
+        "Rabobank", "Regions Bank", "Revolut", "Royal Bank of Canada", "Santander", "Scotiabank",
+        "Silicon Valley Bank", "Société Générale", "SoFi Bank", "Standard Chartered", "Sumitomo Mitsui",
+        "TD Bank", "TD Canada Trust", "Truist", "U.S. Bank", "UBS", "UOB", "USAA", "Wells Fargo", "Westpac", "Wise"
+    ];
+
+    function showToast(message) {
+        const existingToast = document.querySelector('.toast-message');
+        if (existingToast) existingToast.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            if (toast && toast.parentNode) toast.remove();
+        }, 2000);
+    }
+
+    function render() {
+        const root = document.getElementById('appRoot');
+        if (!root) return;
+        const currentPage = sessionStorage.getItem('currentPage') || 'login';
+        if (currentPage === 'login') {
+            root.innerHTML = renderLogin();
+            attachLoginEvents();
+        } else if (currentPage === 'dashboard') {
+            root.innerHTML = renderDashboard();
+            attachDashboardEvents();
+        } else if (currentPage === 'transferForm') {
+            root.innerHTML = renderTransferForm();
+            attachTransferFormEvents();
+        } else if (currentPage === 'pinVerification') {
+            root.innerHTML = renderPinVerification();
+            attachPinVerificationEvents();
+        } else if (currentPage === 'pendingPayment') {
+            document.body.innerHTML = renderFullPendingPage();
+            attachPendingPageEvents();
+            return;
+        }
+    }
+
+    function renderLogin() {
+        return `
+            <div class="page">
+                <div class="logo-container">
+                    <div class="logo">
+                        <div class="capitalone-wordmark">CAPITAL ONE</div>
+                    </div>
+                </div>
+                <div class="logo-sub">Secure international transfers</div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 1.2rem; color:#1a2c3e;">Sign in</h2>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Access code</label>
+                    <input type="password" id="loginCode" placeholder="6-digit code">
+                </div>
+                <button id="loginBtn">Sign in</button>
+                <div id="loginFeedback" class="error-msg"></div>
+                <div class="note-text">Please log in with the credentials you have been provided.</div>
+                <div class="capitalone-watermark">Capital One Financial Services</div>
+            </div>
+        `;
+    }
+
+    function attachLoginEvents() {
+        const loginBtn = document.getElementById('loginBtn');
+        const userInput = document.getElementById('loginUsername');
+        const codeInput = document.getElementById('loginCode');
+        const feedback = document.getElementById('loginFeedback');
+
+        const attemptLogin = () => {
+            const username = userInput?.value.trim();
+            const code = codeInput?.value.trim();
+            if (username === VALID_USERNAME && code === VALID_CODE) {
+                if (feedback) {
+                    feedback.innerHTML = "Verifying your credentials securely...";
+                    feedback.style.color = "#0047ab";
+                }
+                setTimeout(() => {
+                    if (feedback) {
+                        feedback.innerHTML = "Login successful. Redirecting...";
+                        feedback.style.color = "#2b6e3c";
+                    }
+                    setTimeout(() => {
+                        if (!sessionStorage.getItem('balance')) {
+                            sessionStorage.setItem('balance', '259630');
+                        }
+                        sessionStorage.setItem('accountMask', ACCOUNT_MASK);
+                        
+                        if (!sessionStorage.getItem('transactions')) {
+                            const now = new Date();
+                            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                            
+                            sessionStorage.setItem('transactions', JSON.stringify([
+                                { 
+                                    desc: "Deposit", 
+                                    amount: 300, 
+                                    date: `${dateStr} at ${timeStr}`
+                                },
+                                { desc: "Withdrawal", amount: -60000, date: "May 18, 2026" },
+                                { desc: "Withdrawal", amount: -85000, date: "Jan 10, 2026" },
+                                { desc: "Withdrawal", amount: -50000, date: "May 7, 2022" },
+                                { desc: "Withdrawal", amount: -55000, date: "Apr 25, 2022" },
+                                { desc: "Withdrawal", amount: -40000, date: "Apr 12, 2022" },
+                                { desc: "Withdrawal", amount: -40000, date: "Feb 13, 2026" }
+                            ]));
+                        }
+                        
+                        sessionStorage.setItem('currentPage', 'dashboard');
+                        render();
+                    }, 600);
+                }, 500);
+            } else {
+                if (feedback) {
+                    feedback.innerHTML = "Invalid credentials. Please try again.";
+                    feedback.style.color = "#d14545";
+                }
+            }
+        };
+        loginBtn?.addEventListener('click', attemptLogin);
+        [userInput, codeInput].forEach(inp => inp?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') attemptLogin();
+        }));
+    }
+
+    function renderDashboard() {
+        let bal = sessionStorage.getItem('balance') || '259630';
+        const balance = parseFloat(bal);
+        let transactions = JSON.parse(sessionStorage.getItem('transactions') || '[]');
+
+        return `
+            <div class="page">
+                <div class="dashboard-header">
+                    <div class="participant-badge">
+                        <div class="user-info-row">
+                            <span class="greeting-text">Welcome back, Romero Harvey</span>
+                        </div>
+                    </div>
+                    <button id="logoutBtnDashboard" class="logout-btn">Logout</button>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">TOTAL BALANCE (USD)</div>
+                    <div class="balance-amount">$${balance.toLocaleString()}</div>
+                    <div class="account-number">Account ${ACCOUNT_MASK}</div>
+                </div>
+                <div class="transfer-card">
+                    <div style="font-weight: 600; margin-bottom: 0.3rem; color:#1a2c3e;">Bank transfer</div>
+                    <p style="font-size: 0.8rem; color: #5a6e8a; margin-bottom: 1rem;">Send money securely to another bank account worldwide.</p>
+                    <button id="initiateTransferBtn">Transfer funds →</button>
+                </div>
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 0.8rem; font-size: 0.8rem; color:#1a2c3e;">Recent transactions</div>
+                    ${transactions.map((tx, idx) => `
+                        <div class="transaction-item ${tx.desc === 'Pending Withdrawal' ? 'pending-transaction' : ''}" data-desc="${tx.desc}" data-idx="${idx}" data-amount="${tx.amount}" data-bank="${tx.bank || ''}" data-account="${tx.account || ''}" data-name="${tx.name || ''}">
+                            <div>
+                                <div class="transaction-desc">${tx.desc}</div>
+                                <div class="transaction-date">${tx.date}</div>
+                            </div>
+                            <div class="transaction-amount ${tx.amount > 0 ? 'positive' : ''}">${tx.amount > 0 ? '+' : ''}$${Math.abs(tx.amount).toLocaleString()}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    function attachDashboardEvents() {
+        document.getElementById('logoutBtnDashboard')?.addEventListener('click', () => {
+            sessionStorage.clear();
+            sessionStorage.setItem('currentPage', 'login');
+            render();
+        });
+        document.getElementById('initiateTransferBtn')?.addEventListener('click', () => {
+            sessionStorage.setItem('currentPage', 'transferForm');
+            render();
+        });
+        
+        document.querySelectorAll('.transaction-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const desc = item.getAttribute('data-desc');
+                if (desc === 'Pending Withdrawal') {
+                    const amount = item.getAttribute('data-amount');
+                    const bank = item.getAttribute('data-bank');
+                    const account = item.getAttribute('data-account');
+                    const name = item.getAttribute('data-name');
+                    if (amount) sessionStorage.setItem('pendingAmount', Math.abs(parseFloat(amount)).toString());
+                    if (bank) sessionStorage.setItem('pendingBank', bank);
+                    if (account) sessionStorage.setItem('pendingAccount', account);
+                    if (name) sessionStorage.setItem('pendingName', name);
+                    sessionStorage.setItem('currentPage', 'pendingPayment');
+                    render();
+                }
+            });
+        });
+    }
+
+    function renderTransferForm() {
+        let bal = sessionStorage.getItem('balance') || '259630';
+        const balance = parseFloat(bal);
+        
+        return `
+            <div class="page">
+                <button id="backFromTransfer" class="back-link" style="margin-bottom: 1rem;">← Back to dashboard</button>
+                <h2 style="font-size: 1.4rem; margin-bottom: 0.2rem; color:#1a2c3e;">Initiate bank transfer</h2>
+                <p style="font-size: 0.8rem; color: #5a6e8a; margin-bottom: 1.2rem;">Send funds to any international bank account.</p>
+                <div class="transfer-detail">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 500; color: #5a6e8a;">Selected account</span>
+                        <span style="color: #1a2c3e; font-weight: 600;">
+                            <strong style="color: #0047ab;">${ACCOUNT_MASK}</strong> 
+                            <span style="color: #2b6e3c;">($${balance.toLocaleString()} available)</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Recipient bank name</label>
+                    <div class="bank-dropdown">
+                        <input type="text" id="recipientBank" class="bank-input" placeholder="Search banks or type custom name..." autocomplete="off">
+                        <div id="bankDropdownList" class="bank-dropdown-list"></div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Recipient account number</label>
+                    <input type="text" id="recipientAccount" placeholder="Account number or IBAN">
+                </div>
+                <div class="input-group">
+                    <label>Recipient full name</label>
+                    <input type="text" id="recipientName" placeholder="Full name of recipient">
+                </div>
+                <div class="input-group">
+                    <label>Transfer amount (USD)</label>
+                    <input type="number" id="transferAmount" placeholder="0.00" min="1" max="${balance}">
+                    <div class="small-note">Available: $${balance.toLocaleString()}</div>
+                </div>
+                <button id="continueBtn">Withdraw</button>
+                <div id="transferError" class="error-msg"></div>
+            </div>
+        `;
+    }
+
+    function attachTransferFormEvents() {
+        document.getElementById('backFromTransfer')?.addEventListener('click', () => {
+            sessionStorage.setItem('currentPage', 'dashboard');
+            render();
+        });
+        
+        const bankInput = document.getElementById('recipientBank');
+        const dropdownList = document.getElementById('bankDropdownList');
+        
+        function filterBanks(searchText) {
+            return BANK_LIST.filter(bank => bank.toLowerCase().includes(searchText.toLowerCase()));
+        }
+        function renderDropdown(filteredBanks) {
+            if (filteredBanks.length === 0) {
+                dropdownList.innerHTML = '<div class="bank-option" style="color: #8ba0bc;">No matching banks. You can type any custom name.</div>';
+            } else {
+                dropdownList.innerHTML = filteredBanks.map(bank => `<div class="bank-option" data-bank="${bank}">${bank}</div>`).join('');
+                document.querySelectorAll('.bank-option[data-bank]').forEach(option => {
+                    option.addEventListener('click', () => {
+                        bankInput.value = option.getAttribute('data-bank');
+                        dropdownList.classList.remove('show');
+                    });
+                });
+            }
+        }
+        function updateDropdown() { renderDropdown(filterBanks(bankInput.value)); }
+        bankInput.addEventListener('input', () => { updateDropdown(); dropdownList.classList.add('show'); });
+        bankInput.addEventListener('focus', () => { updateDropdown(); dropdownList.classList.add('show'); });
+        document.addEventListener('click', (e) => {
+            if (!bankInput.contains(e.target) && !dropdownList.contains(e.target)) dropdownList.classList.remove('show');
+        });
+        renderDropdown(BANK_LIST);
+        
+        const continueBtn = document.getElementById('continueBtn');
+        const errorDiv = document.getElementById('transferError');
+        
+        continueBtn?.addEventListener('click', () => {
+            const bank = document.getElementById('recipientBank')?.value.trim();
+            const acc = document.getElementById('recipientAccount')?.value.trim();
+            const name = document.getElementById('recipientName')?.value.trim();
+            const amountRaw = document.getElementById('transferAmount')?.value;
+            const amount = parseFloat(amountRaw);
+            const currentBal = parseFloat(sessionStorage.getItem('balance') || '259630');
+            
+            if (!bank) { errorDiv.innerText = "Please enter a recipient bank."; return; }
+            if (!acc) { errorDiv.innerText = "Please enter recipient account number."; return; }
+            if (!name) { errorDiv.innerText = "Please enter recipient name."; return; }
+            if (isNaN(amount) || amount <= 0) { errorDiv.innerText = "Enter a valid transfer amount."; return; }
+            if (amount > currentBal) { errorDiv.innerText = `Insufficient balance. Available: $${currentBal.toLocaleString()}`; return; }
+            
+            sessionStorage.setItem('pendingAmount', amount.toString());
+            sessionStorage.setItem('pendingBank', bank);
+            sessionStorage.setItem('pendingAccount', acc);
+            sessionStorage.setItem('pendingName', name);
+            
+            errorDiv.innerHTML = "Connecting to banking network...<br>Verifying recipient details";
+            errorDiv.style.color = "#0047ab";
+            setTimeout(() => {
+                sessionStorage.setItem('currentPage', 'pinVerification');
+                render();
+            }, 1400);
+        });
+    }
+
+    let pinInputValue = "";
+
+    function renderPinVerification() {
+        pinInputValue = "";
+        return `
+            <div class="page" style="text-align: center;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color:#1a2c3e;">Payment Verification</h2>
+                <p style="color: #5a6e8a; margin-bottom: 1.5rem;">Enter your 4-digit payment PIN</p>
+                <div class="pin-display" id="pinDisplay">____</div>
+                <div class="numeric-keypad" id="numericKeypad">
+                    <div class="keypad-btn" data-num="1">1</div>
+                    <div class="keypad-btn" data-num="2">2</div>
+                    <div class="keypad-btn" data-num="3">3</div>
+                    <div class="keypad-btn" data-num="4">4</div>
+                    <div class="keypad-btn" data-num="5">5</div>
+                    <div class="keypad-btn" data-num="6">6</div>
+                    <div class="keypad-btn" data-num="7">7</div>
+                    <div class="keypad-btn" data-num="8">8</div>
+                    <div class="keypad-btn" data-num="9">9</div>
+                    <div class="keypad-btn keypad-clear" data-num="clear">CLEAR</div>
+                    <div class="keypad-btn" data-num="0">0</div>
+                    <div class="keypad-btn keypad-delete" data-num="delete">DELETE</div>
+                </div>
+                <button id="verifyPinBtn">Verify PIN</button>
+                <button id="backFromPin" class="back-link" style="margin-top: 1rem;">← Back</button>
+                <div id="pinError" class="error-msg"></div>
+            </div>
+        `;
+    }
+
+    function attachPinVerificationEvents() {
+        const verifyBtn = document.getElementById('verifyPinBtn');
+        const errorSpan = document.getElementById('pinError');
+        const backBtn = document.getElementById('backFromPin');
+        const pinDisplay = document.getElementById('pinDisplay');
+        
+        function updatePinDisplay() {
+            if (pinDisplay) {
+                let displayText = pinInputValue.padEnd(4, '_');
+                pinDisplay.textContent = displayText;
+            }
+        }
+        
+        function addDigit(num) {
+            if (pinInputValue.length < 4) {
+                pinInputValue += num;
+                updatePinDisplay();
+            }
+        }
+        
+        function deleteDigit() {
+            pinInputValue = pinInputValue.slice(0, -1);
+            updatePinDisplay();
+        }
+        
+        function clearPin() {
+            pinInputValue = "";
+            updatePinDisplay();
+        }
+        
+        document.querySelectorAll('.keypad-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const num = btn.getAttribute('data-num');
+                if (num === 'clear') {
+                    clearPin();
+                } else if (num === 'delete') {
+                    deleteDigit();
+                } else {
+                    addDigit(num);
+                }
+            });
+        });
+        
+        backBtn?.addEventListener('click', () => {
+            sessionStorage.setItem('currentPage', 'transferForm');
+            render();
+        });
+        
+        verifyBtn?.addEventListener('click', () => {
+            if (pinInputValue === VALID_PIN) {
+                let balance = parseFloat(sessionStorage.getItem('balance') || '259630');
+                const pendingAmt = parseFloat(sessionStorage.getItem('pendingAmount') || '0');
+                const pendingBank = sessionStorage.getItem('pendingBank') || '';
+                const pendingAccount = sessionStorage.getItem('pendingAccount') || '';
+                const pendingName = sessionStorage.getItem('pendingName') || '';
+                sessionStorage.setItem('balance', (balance - pendingAmt).toString());
+                
+                let transactions = JSON.parse(sessionStorage.getItem('transactions') || '[]');
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                transactions.unshift({ 
+                    desc: "Pending Withdrawal", 
+                    amount: -pendingAmt, 
+                    date: `${dateStr} at ${timeStr}`,
+                    bank: pendingBank,
+                    account: pendingAccount,
+                    name: pendingName
+                });
+                sessionStorage.setItem('transactions', JSON.stringify(transactions));
+                
+                sessionStorage.setItem('currentPage', 'pendingPayment');
+                render();
+            } else {
+                errorSpan.innerText = "Wrong PIN. Please try again.";
+                pinInputValue = "";
+                updatePinDisplay();
+            }
+        });
+    }
+
+    function renderFullPendingPage() {
+        const pendingAmount = parseFloat(sessionStorage.getItem('pendingAmount') || '0');
+        const pendingBank = sessionStorage.getItem('pendingBank') || 'Unknown Bank';
+        const pendingAccount = sessionStorage.getItem('pendingAccount') || 'Unknown Account';
+        const pendingName = sessionStorage.getItem('pendingName') || 'Unknown Recipient';
+        
+        return `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0; margin: 0; z-index: 10000; overflow-y: auto;">
+                <div style="width: 100%; max-width: 500px; background: white; border-radius: 0; padding: 2rem; box-shadow: none; border: none; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 1.6rem; font-weight: 700; color: #0047ab; letter-spacing: 2px; margin-bottom: 1rem;">CAPITAL ONE BANKING</div>
+                        <div style="width: 70px; height: 70px; background: #0047ab; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <span style="font-size: 1.8rem; color: white;">⏳</span>
+                        </div>
+                        <h2 style="color: #1a2c3e; margin-bottom: 0.5rem;">PENDING PAYMENT</h2>
+                        <p style="color: #5a6e8a; font-size: 0.8rem;">Awaiting bank approval</p>
+                    </div>
+                    
+                    <div style="background: #f8fafc; border-radius: 24px; padding: 1.2rem; margin-bottom: 1.5rem;">
+                        <div style="margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #e2e8f0;">
+                            <div style="font-size: 0.7rem; color: #8ba0bc; margin-bottom: 0.2rem;">AMOUNT</div>
+                            <div style="font-size: 1.8rem; font-weight: 700; color: #1a2c3e;">$${pendingAmount.toLocaleString()} USD</div>
+                        </div>
+                        <div style="display: grid; gap: 0.8rem;">
+                            <div><span style="font-size: 0.7rem; color: #8ba0bc;">RECIPIENT NAME</span><div style="font-weight: 500;">${escapeHtml(pendingName)}</div></div>
+                            <div><span style="font-size: 0.7rem; color: #8ba0bc;">RECIPIENT BANK</span><div>${escapeHtml(pendingBank)}</div></div>
+                            <div><span style="font-size: 0.7rem; color: #8ba0bc;">ACCOUNT NUMBER</span><div>${escapeHtml(pendingAccount)}</div></div>
+                            <div><span style="font-size: 0.7rem; color: #8ba0bc;">STATUS</span><div><span style="color: #0047ab; font-weight: 500;">Payment pending, visit our closest Branch for support</span></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="dashboardFinalBtn" style="background: #0047ab; color: white; border: none; padding: 0.85rem 1rem; border-radius: 40px; font-weight: 600; width: 100%; cursor: pointer;">Back to Dashboard</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function escapeHtml(str) { 
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) { 
+            if (m === '&') return '&amp;'; 
+            if (m === '<') return '&lt;'; 
+            if (m === '>') return '&gt;'; 
+            return m; 
+        }); 
+    }
+
+    function attachPendingPageEvents() {
+        const finalBtn = document.getElementById('dashboardFinalBtn');
+        if (finalBtn) {
+            finalBtn.addEventListener('click', () => {
+                sessionStorage.removeItem('pendingAmount');
+                sessionStorage.removeItem('pendingBank');
+                sessionStorage.removeItem('pendingAccount');
+                sessionStorage.removeItem('pendingName');
+                sessionStorage.setItem('currentPage', 'dashboard');
+                location.reload();
+            });
+        }
+    }
+
+    // Initialize session storage
+    if (!sessionStorage.getItem('currentPage')) {
+        sessionStorage.setItem('currentPage', 'login');
+        sessionStorage.setItem('balance', '259630');
+        sessionStorage.setItem('accountMask', ACCOUNT_MASK);
+        
+        if (!sessionStorage.getItem('transactions')) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            sessionStorage.setItem('transactions', JSON.stringify([
+                { 
+                    desc: "Deposit", 
+                    amount: 300, 
+                    date: `${dateStr} at ${timeStr}`
+                },
+                { desc: "Withdrawal", amount: -60000, date: "May 18, 2026" },
+                { desc: "Withdrawal", amount: -85000, date: "Jan 10, 2026" },
+                { desc: "Withdrawal", amount: -50000, date: "May 7, 2022" },
+                { desc: "Withdrawal", amount: -55000, date: "Apr 25, 2022" },
+                { desc: "Withdrawal", amount: -40000, date: "Apr 12, 2022" },
+                { desc: "Withdrawal", amount: -40000, date: "Feb 13, 2026" }
+            ]));
+        }
+    }
+    render();
+</script>
+</body>
+</html>
