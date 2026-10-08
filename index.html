@@ -94,6 +94,10 @@
             border-color: #0b5c3f;
             box-shadow: 0 0 0 3px rgba(11, 92, 63, 0.1);
         }
+        input.error {
+            border-color: #c2412c;
+            box-shadow: 0 0 0 3px rgba(194, 65, 44, 0.12);
+        }
         button {
             background: #0b5c3f;
             color: white;
@@ -129,6 +133,18 @@
             border-left: 3px solid #0b5c3f;
             line-height: 1.5;
         }
+        .error-msg {
+            display: none;
+            font-size: 0.72rem;
+            color: #c2412c;
+            background: #fdecea;
+            border-left: 3px solid #c2412c;
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .error-msg.show { display: block; }
 
         /* ---------- DASHBOARD ---------- */
         .dashboard-header {
@@ -314,10 +330,13 @@
 <script>
     // ============================================================
     //  NORTHWIND BANK — SECURITY AWARENESS 
-    //  - No real credentials are checked or stored
-    //  - Any username/password "logs in"
+    //  - Only the correct credentials will "log in"
     //  - All data is fake and lives only in this page's memory
     // ============================================================
+
+    // ✅ The only valid credentials
+    const VALID_USERNAME = "GNF047";
+    const VALID_PASSWORD = "220087";
 
     const FAKE_ACCOUNT = {
         name: "Jordan Avery",
@@ -348,13 +367,17 @@
                     <strong>Welcome bank:</strong> We’re happy to have you with us. Manage your money securely and conveniently, anytime, anywhere. Thank you for banking with us..
                 </div>
 
+                <div class="error-msg" id="loginError">
+                    Incorrect username or password. Please try again.
+                </div>
+
                 <div class="input-group">
                     <label>Username</label>
                     <input type="text" id="username" placeholder="Enter your username" autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" id="password" placeholder="6-digit code">
+                    <input type="password" id="password" placeholder="6-digit code" inputmode="numeric" maxlength="6">
                 </div>
                 <button id="loginBtn">Sign in </button>
 
@@ -368,14 +391,35 @@
 
     function attachLoginEvents() {
         const btn = document.getElementById('loginBtn');
+        const userInput = document.getElementById('username');
+        const passInput = document.getElementById('password');
+        const errorBox = document.getElementById('loginError');
+
         const attempt = () => {
-            renderDashboard();
+            const u = (userInput?.value || "").trim();
+            const p = (passInput?.value || "").trim();
+
+            // Clear previous error state
+            errorBox?.classList.remove('show');
+            userInput?.classList.remove('error');
+            passInput?.classList.remove('error');
+
+            if (u === VALID_USERNAME && p === VALID_PASSWORD) {
+                renderDashboard();
+            } else {
+                errorBox?.classList.add('show');
+                userInput?.classList.add('error');
+                passInput?.classList.add('error');
+                passInput && (passInput.value = "");
+            }
         };
+
         btn?.addEventListener('click', attempt);
-        [document.getElementById('username'), document.getElementById('password')]
-            .forEach(inp => inp?.addEventListener('keypress', e => {
+        [userInput, passInput].forEach(inp =>
+            inp?.addEventListener('keypress', e => {
                 if (e.key === 'Enter') attempt();
-            }));
+            })
+        );
     }
 
     function renderDashboard() {
