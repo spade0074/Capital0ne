@@ -302,55 +302,6 @@
             margin-top: 0.3rem;
         }
         .reset-btn:hover { background: #0f1a2a; }
-
-        /* ---------- DEBRIEF PANEL ---------- */
-        .debrief {
-            max-width: 480px;
-            width: 100%;
-            background: #fff;
-            border-radius: 24px;
-            padding: 1.8rem 1.6rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-        }
-        .debrief h2 {
-            color: #1a2c3e;
-            font-size: 1.25rem;
-            margin-bottom: 0.4rem;
-        }
-        .debrief .sub {
-            font-size: 0.78rem;
-            color: #6c7a91;
-            margin-bottom: 1.2rem;
-        }
-        .debrief ul {
-            list-style: none;
-            margin-bottom: 1.3rem;
-        }
-        .debrief li {
-            font-size: 0.82rem;
-            color: #2c3e50;
-            line-height: 1.5;
-            padding: 0.6rem 0 0.6rem 1.8rem;
-            position: relative;
-            border-bottom: 1px solid #eef3f8;
-        }
-        .debrief li::before {
-            content: "⚠️";
-            position: absolute;
-            left: 0;
-            top: 0.55rem;
-            font-size: 0.9rem;
-        }
-        .debrief li:last-child { border-bottom: none; }
-        .debrief .closing {
-            font-size: 0.78rem;
-            color: #0b5c3f;
-            background: #e8f5ef;
-            border-radius: 12px;
-            padding: 0.8rem 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -382,17 +333,6 @@
     };
 
     let freezeTimer = null;
-
-    function showToast(msg) {
-        const existing = document.querySelector('.toast-message');
-        if (existing) existing.remove();
-        const t = document.createElement('div');
-        t.className = 'toast-message';
-        t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a2c3e;color:#fff;padding:0.75rem 1.5rem;border-radius:40px;font-size:0.85rem;z-index:10000;font-weight:500;';
-        t.textContent = msg;
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 2000);
-    }
 
     function render() {
         const root = document.getElementById('appRoot');
@@ -506,9 +446,10 @@
             render();
         });
 
+        // "Log out" on the freeze overlay → straight back to login
         document.getElementById('resetDemoBtn')?.addEventListener('click', () => {
             clearTimeout(freezeTimer);
-            showDebrief();
+            render();
         });
 
         // After 5 seconds, blur the dashboard and reveal the freeze overlay
@@ -516,38 +457,6 @@
             const overlay = document.getElementById('freezeOverlay');
             if (overlay) overlay.classList.add('show');
         }, 5000);
-    }
-
-    function showDebrief() {
-        const root = document.getElementById('appRoot');
-        root.innerHTML = `
-            <div style="position:fixed;inset:0;background:rgba(10,20,30,0.6);
-                        backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-                        display:flex;align-items:center;justify-content:center;
-                        padding:1.5rem;z-index:9500;">
-                <div class="debrief">
-                    <h2>What just happened?</h2>
-                    <div class="sub">You were shown a simulated bank-freeze screen.</div>
-
-                    <ul>
-                        <li>The login accepted <em>any</em> input — real banks never do.</li>
-                        <li>You saw a plausible dashboard, then an unexplained freeze.</li>
-                        <li>The freeze blocked every action with no way to recover.</li>
-                        <li>The pattern is designed to make you panic and "act fast."</li>
-                    </ul>
-
-                    <div class="closing">
-                        <strong>Red flags to remember:</strong> urgency, a sudden lockout
-                        with no explanation, a request to "verify" your password/PIN/OTP,
-                        and any page you reached from a link or pop-up instead of opening
-                        your bank's app or typing the address yourself.
-                    </div>
-
-                    <button id="startOverBtn">Start over</button>
-                </div>
-            </div>
-        `;
-        document.getElementById('startOverBtn')?.addEventListener('click', render);
     }
 
     render();
